@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &791752933350315617
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 210605399182855449}
+  m_Layer: 8
+  m_Name: FirePointUp
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &210605399182855449
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 791752933350315617}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.033, y: 0.208, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8357814181842681470}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8357814180266619961
 GameObject:
   m_ObjectHideFlags: 0
@@ -84,7 +114,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8357814181496543199}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.156, y: 0.008, z: 0}
+  m_LocalPosition: {x: 0.169, y: 0.029, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8357814181842681470}
@@ -128,6 +158,7 @@ Transform:
   - {fileID: 8357814180266619962}
   - {fileID: 8357814181010096936}
   - {fileID: 8357814181496543192}
+  - {fileID: 210605399182855449}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -145,6 +176,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -195,15 +227,19 @@ MonoBehaviour:
   m_JumpForce: 250
   m_CrouchSpeed: 0.36
   m_MovementSmoothing: 0.05
-  m_AirControl: 0
+  m_AirControl: 1
   m_WhatIsGround:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 512
   m_GroundCheck: {fileID: 8357814181010096936}
   m_CeilingCheck: {fileID: 8357814180266619962}
   m_CrouchDisableCollider: {fileID: 8357814181842681464}
   maxHealth: 5
   timeInvincible: 2
+  animator: {fileID: 8357814181842681445}
+  deathEffect: {fileID: 3214603949122844514, guid: 25914890563431742991fd33a263caf5,
+    type: 3}
+  gameOverUI: {fileID: 0}
   OnLandEvent:
     m_PersistentCalls:
       m_Calls:
@@ -234,6 +270,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 8357814181842681467}
+  firePoint: {fileID: 8357814181496543192}
   runSpeed: 5
   animator: {fileID: 8357814181842681445}
 --- !u!114 &8357814181842681446
@@ -248,9 +285,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebcd6d9b70797424fb70089d688fe66f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controller: {fileID: 8357814181842681467}
   firePoint: {fileID: 8357814181496543192}
+  firePointUp: {fileID: 210605399182855449}
   bulletPrefab: {fileID: 86475614625333758, guid: d57cb661b1bb3ff42bf1848b3a30f2ef,
     type: 3}
+  bulletPrefabUp: {fileID: 86475614625333758, guid: 1b182887398967a4e8d9024dc4dddab0,
+    type: 3}
+  anim: {fileID: 8357814181842681445}
+  shotDelay: 0
 --- !u!58 &8357814181842681465
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -264,9 +307,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.000934572, y: -0.147}
+  m_Offset: {x: -0.0001, y: -0.147}
   serializedVersion: 2
-  m_Radius: 0.09035246
+  m_Radius: 0.091
 --- !u!61 &8357814181842681464
 BoxCollider2D:
   m_ObjectHideFlags: 0

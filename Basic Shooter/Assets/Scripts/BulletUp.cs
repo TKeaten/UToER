@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class BulletUp : MonoBehaviour
 {
 
-    public float speed = 20f;
+    public float speed = 5f;
     public int damage = 25;
     public Rigidbody2D rb;
     public GameObject impactEffect;
@@ -13,13 +13,13 @@ public class Bullet : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rb.velocity = transform.right * speed;
+        rb.velocity = transform.up * speed;
         StartCoroutine(TimeDestroy());
     }
 
     private void OnTriggerEnter2D(Collider2D hitInfo)
     {
-        EnemyHealth enemy = hitInfo.GetComponent<EnemyHealth>();
+        EnemyCrab enemy = hitInfo.GetComponent<EnemyCrab>();
         if (enemy != null)
         {
             enemy.TakeDamage(damage);

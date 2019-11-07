@@ -12,18 +12,23 @@ public class CharacterController2D : MonoBehaviour
     [SerializeField] private Transform m_CeilingCheck;                          // A position marking where to check for ceilings
     [SerializeField] private Collider2D m_CrouchDisableCollider;                // A collider that will be disabled when crouching
 
-    const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
-    private bool m_Grounded;            // Whether or not the player is grounded.
-    const float k_CeilingRadius = .2f; // Radius of the overlap circle to determine if the player can stand up
+    const float k_GroundedRadius = .01f;                                         // Radius of the overlap circle to determine if grounded
+    private bool m_Grounded;                                                    // Whether or not the player is grounded.
+    const float k_CeilingRadius = .2f;                                          // Radius of the overlap circle to determine if the player can stand up
     private Rigidbody2D m_Rigidbody2D;
-    private bool m_FacingRight = true;  // For determining which way the player is currently facing.
+    private bool m_FacingRight = true;                                          // For determining which way the player is currently facing.
     private Vector3 m_Velocity = Vector3.zero;
     public int maxHealth = 5;
-    public int health { get { return currentHealth; } } // "Property - i.e. a function that operates like a variable
+    public int health { get { return currentHealth; } }                         // Property - i.e. a function that operates like a variable
     int currentHealth;
     public float timeInvincible = 2.0f;
     bool isInvincible;
     float invincibleTimer;
+    private float m_GroundedCheckDelay;                                         // To stop the ground check from automatically flagging grounded
+    public Animator animator;
+    public GameObject deathEffect;
+    public GameObject gameOverUI;
+    public static bool gameOver = false;
 
     [Header("Events")]
     [Space]
@@ -35,6 +40,11 @@ public class CharacterController2D : MonoBehaviour
 
     public BoolEvent OnCrouchEvent;
     private bool m_wasCrouching = false;
+
+    private void Start()
+    {
+        currentHealth = maxHealth;
+    }
 
     private void Awake()
     {
@@ -51,27 +61,41 @@ public class CharacterController2D : MonoBehaviour
     {
         bool wasGrounded = m_Grounded;
         m_Grounded = false;
+        m_GroundedCheckDelay -= Time.deltaTime;
 
         // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
         // This can be done using layers instead but Sample Assets will not overwrite your project settings.
         Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
-        for (int i = 0; i < colliders.Length; i++)
+        if (m_GroundedCheckDelay <= 0)
         {
-            if (colliders[i].gameObject != gameObject)
+            for (int i = 0; i < colliders.Length; i++)
             {
-                m_Grounded = true;
-                if (!wasGrounded)
-                    OnLandEvent.Invoke();
+                if (colliders[i].gameObject != gameObject)
+                {
+                    m_Grounded = true;
+                    if (!wasGrounded)
+                        OnLandEvent.Invoke();
+                }
             }
         }
-        Debug.Log(wasGrounded); //Program sees me immediately grounded after the jump, then back to jumping
+
+        if (isInvincible)
+        {
+            invincibleTimer -= Time.deltaTime;
+            if (invincibleTimer < 0)
+            {
+                isInvincible = false;
+                animator.SetBool("Hit", false);
+            }
+        }
     }
 
 
     public void Move(float move, bool crouch, bool jump)
     {
+        
         // If crouching, check to see if the character can stand up
-        if (!crouch)
+        if (crouch)
         {
             // If the character has a ceiling preventing them from standing up, keep them crouching
             if (Physics2D.OverlapCircle(m_CeilingCheck.position, k_CeilingRadius, m_WhatIsGround))
@@ -136,6 +160,7 @@ public class CharacterController2D : MonoBehaviour
         {
             // Add a vertical force to the player.
             m_Grounded = false;
+            m_GroundedCheckDelay = 0.05f;
             m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
         }
     }
@@ -155,12 +180,30 @@ public class CharacterController2D : MonoBehaviour
         {
             if (isInvincible)
                 return;
-            //animator.SetTrigger("Hit");
+            animator.SetTrigger("Hit");
             //hitEffect.Play();
             isInvincible = true;
             invincibleTimer = timeInvincible;
         }
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
-        //UIHealthBar.instance.SetValue(currentHealth / (float)maxHealth);
+        PlayerHealthBar.instance.SetValue(currentHealth / (float)maxHealth);
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    public void Die()
+    {
+        Instantiate(deathEffect, transform.position, Quaternion.identity);
+        Destroy(gameObject);
+        GameOver();
+    }
+
+    public void GameOver()
+    {
+        gameOverUI.SetActive(true);
+        gameOver = true;
+        Time.timeScale = 0.0f; // could be higher, and would slow game instead of pausing
     }
 }

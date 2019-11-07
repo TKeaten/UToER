@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public CharacterController2D controller;
+    public Transform firePoint;
     public float runSpeed = 40f;
     public Animator animator;
     float horizontalMove = 0f;
@@ -28,9 +29,11 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonDown("Crouch"))
         {
             crouch = true;
+            firePoint.position = new Vector3(firePoint.position.x, firePoint.position.y - .125f, firePoint.position.z);
         } else if (Input.GetButtonUp("Crouch"))
         {
             crouch = false;
+            firePoint.position = new Vector3(firePoint.position.x, firePoint.position.y + .125f, firePoint.position.z);
         }
     }
 
@@ -49,8 +52,8 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // This is made to trigger on an event which is created in the Character Controller script.
-    //public void OnCrouching(bool isCrouching)
-    //{
-    //    animator.SetBool("IsCrouching", isCrouching);
-    //}
+    public void OnCrouching(bool isCrouching)
+    {
+        animator.SetBool("IsCrouching", isCrouching);
+    }
 }

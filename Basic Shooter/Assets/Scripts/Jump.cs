@@ -72,11 +72,10 @@ public class Jump : MonoBehaviour
             Flip();
         }
 
-        // Move the character
-        // The initial drag is brutal
-        rb.AddForce(Vector2.right * horiz * speed);
-        // Way too fast
-        //rb.velocity += Vector2.right * horiz * speed;
+        Vector2 targetVelocity = Vector2.right * horiz * speed;
+        Vector2 refVelocity = Vector2.zero;
+        Vector2 dampedVelocity = Vector2.SmoothDamp(rb.velocity, targetVelocity, ref refVelocity, .05f);
+        rb.velocity = dampedVelocity;
         anim.SetFloat("Speed",  Mathf.Abs(horiz * speed));
 
         RaycastHit2D hitInfo;
@@ -135,7 +134,7 @@ public class Jump : MonoBehaviour
             invincibleTimer = timeInvincible;
         }
         currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
-        //UIHealthBar.instance.SetValue(currenthealth / (float)maxHealth); //Need to make a UI health bar for this to work
+        PlayerHealthBar.instance.SetValue(currentHealth / (float)maxHealth);
     }
 
     void Shoot()

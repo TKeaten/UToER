@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
+    public CharacterController2D controller;
     public Transform firePoint;
+    public Transform firePointUp;
     public GameObject bulletPrefab;
-    
+    public GameObject bulletPrefabUp;
+    public Animator anim;
+    public float shotDelay;
+
     /* Raycast shooting
      * public int damage = 25;
      * public GameObject impactEffect;
@@ -16,18 +21,51 @@ public class Weapon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetButtonDown("Fire1"))
+        if (shotDelay <= 0 && PauseMenu.isPaused == false)
         {
-            Shoot();
-            /* Raycast shooting
-             * StartCoroutine(Shoot());
-             */
+            if (Input.GetButtonDown("Fire1"))
+            {
+                /*if (Input.GetKey("w"))
+                {
+                    ShootUp();
+                } else
+                {
+                    Shoot();
+                }*/
+
+                Shoot();
+
+                /* Raycast shooting
+                 * StartCoroutine(Shoot());
+                 */
+            }
         }
+    }
+
+    private void FixedUpdate()
+    {
+        shotDelay -= Time.deltaTime;
     }
 
     void Shoot ()
     {
         Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        anim.SetBool("Shooting", true);
+        shotDelay = 0.4f;
+    }
+
+    /*
+     * This is a super ugly way to go about changing the nature of the shot.  Will need to change.
+     * void ShootUp()   
+    {
+        Instantiate(bulletPrefabUp, firePointUp.position, firePointUp.rotation);
+        anim.SetBool("ShootingUp", true);
+    }
+    */
+    void AnimationEnded()
+    {
+        anim.SetBool("Shooting", false);
+        anim.SetBool("ShootingUp", false);
     }
 
     /* Raycast shooting
