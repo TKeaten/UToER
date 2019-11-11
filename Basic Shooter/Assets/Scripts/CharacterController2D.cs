@@ -180,7 +180,7 @@ public class CharacterController2D : MonoBehaviour
         {
             if (isInvincible)
                 return;
-            animator.SetTrigger("Hit");
+            //animator.SetTrigger("Hit");
             //hitEffect.Play();
             isInvincible = true;
             invincibleTimer = timeInvincible;

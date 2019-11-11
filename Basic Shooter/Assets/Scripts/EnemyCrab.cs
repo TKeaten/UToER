@@ -18,12 +18,12 @@ public class EnemyCrab : MonoBehaviour
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        timer = changeTimer;
+        //timer = changeTimer;
     }
 
-    void Update()
+    /*void Update()
     {
-        /*timer -= Time.deltaTime;
+        timer -= Time.deltaTime;
         if (timer < 0)
         {
             direction = -direction;
@@ -33,20 +33,23 @@ public class EnemyCrab : MonoBehaviour
         Vector2 position = rigidbody2d.position;
         position.x = position.x + Time.deltaTime * speed * direction;
         animator.SetFloat("Move X", direction);
-        rigidbody2d.MovePosition(position); */
+        rigidbody2d.MovePosition(position); 
         Vector2 position = rigidbody2d.position;
         
         animator.SetFloat("Move X", direction);
         rigidbody2d.MovePosition(position);
-    }
+    }*/
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerStay2D(Collider2D other)
     {
-        CharacterController2D player = collision.gameObject.GetComponent<CharacterController2D>();
+        CharacterController2D player = other.GetComponent<CharacterController2D>();
 
         if (player != null)
         {
-            player.ChangeHealth(-1);
+            if (player.health > 0)
+            {
+                player.ChangeHealth(-1);
+            }
         }
     }
 

@@ -8,7 +8,11 @@ public class FallDeath : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        player.Die();
-        player.GameOver();
+        if (collision == player)
+        {
+            Debug.Log("Womp womp");
+            player.Die();
+            player.GameOver();
+        }
     }
 }

@@ -63,7 +63,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\FallDeath.cs" />
     <Compile Include="Assets\Scripts\Bullet.cs" />
     <Compile Include="Assets\Scripts\BulletUp.cs" />
     <Compile Include="Assets\Scripts\CameraBounds.cs" />
@@ -73,6 +72,7 @@
     <Compile Include="Assets\Scripts\EnemyCrab.cs" />
     <Compile Include="Assets\Scripts\EnemyGFX.cs" />
     <Compile Include="Assets\Scripts\EnemyHealth.cs" />
+    <Compile Include="Assets\Scripts\FallDeath.cs" />
     <Compile Include="Assets\Scripts\Jump.cs" />
     <Compile Include="Assets\Scripts\MainMenu.cs" />
     <Compile Include="Assets\Scripts\OptionsMenu.cs" />
